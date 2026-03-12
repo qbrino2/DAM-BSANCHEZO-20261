@@ -6,75 +6,63 @@ import { appStyles } from './App.style';
 type AppProps = {}
 
 type AppState = {
-  number1: number | null
-  number2: number | null
-  operation: string
   display: string
+  firstNumber: number
+  operation: string
 }
 
 class App extends React.Component<AppProps, AppState> {
 
   state: AppState = {
-    number1: null,
-    number2: null,
-    operation: "",
-    display: ""
+    display: "0",
+    firstNumber: 0,
+    operation: ""
   }
 
-  handleNumber = (num: number) => {
-
-    if (this.state.number1 === null) {
-      this.setState({
-        number1: num,
-        display: num.toString()
-      })
-    }
-
-    else if (this.state.operation !== "" && this.state.number2 === null) {
-      this.setState({
-        number2: num,
-        display: this.state.display + " " + num
-      })
-    }
-
+  handleNumber = (num: string) => {
+    this.setState({
+      display: this.state.display === "0"
+        ? num
+        : this.state.display + num
+    })
   }
 
   handleOperation = (op: string) => {
-
-    if (this.state.number1 !== null) {
-      this.setState({
-        operation: op,
-        display: this.state.number1 + " " + op
-      })
-    }
-
+    this.setState({
+      firstNumber: Number(this.state.display),
+      operation: op,
+      display: "0"
+    })
   }
 
-  handleResult = () => {
+handleResult = () => {
 
-    const { number1, number2, operation } = this.state
+  const secondNumber = Number(this.state.display)
+  const { firstNumber, operation } = this.state
 
-    if (number1 !== null && number2 !== null) {
+  let result = 0
 
-      let result = 0
+  switch (operation) {
+    case "+":
+      result = firstNumber + secondNumber
+      break
+    case "-":
+      result = firstNumber - secondNumber
+      break
+    case "*":
+      result = firstNumber * secondNumber
+      break
+    case "/":
+      result = firstNumber / secondNumber
+      break
+  }
 
-      if (operation === "+") {
-        result = number1 + number2
-      }
+  console.log("RESULTADO:", result)
 
-      if (operation === "-") {
-        result = number1 - number2
-      }
 
-      this.setState({
-        display: result.toString(),
-        number1: null,
-        number2: null,
-        operation: ""
-      })
-
-    }
-
+    this.setState({
+      display: result.toString()
+    })
   }
 
   render() {
@@ -88,12 +76,14 @@ class App extends React.Component<AppProps, AppState> {
             {this.state.display}
           </Text>
 
-          <CountScreen label="1" OnPress={() => this.handleNumber(1)} />
-          <CountScreen label="2" OnPress={() => this.handleNumber(2)} />
-          <CountScreen label="3" OnPress={() => this.handleNumber(3)} />
+          <CountScreen label="1" OnPress={() => this.handleNumber("1")} />
+          <CountScreen label="2" OnPress={() => this.handleNumber("2")} />
+          <CountScreen label="3" OnPress={() => this.handleNumber("3")} />
 
           <CountScreen label="+" OnPress={() => this.handleOperation("+")} />
           <CountScreen label="-" OnPress={() => this.handleOperation("-")} />
+          <CountScreen label="" OnPress={() => this.handleOperation("")} />
+          <CountScreen label="/" OnPress={() => this.handleOperation("/")} />
 
           <CountScreen label="=" OnPress={this.handleResult} />
 
