@@ -13,22 +13,23 @@ const RegisterPage = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
 
-const handleRegister = async() => {
-
-    console.log("Tap en registro");
-
-    const dummyUser = {
-        nombre: "pepe",
-        username: "pepe1",
-        correo: "pepe@gmail.com",
-        fechaNacimiento: "2005-10-20",
-        contrasena: "123456"
-    };
-
-    await AuthService.register(dummyUser);
-
+const handleRegister = async (data: {
+  nombre: string;
+  username: string;
+  correo: string;
+  fechaNacimiento: string;
+  contrasena: string;
+}) => {
+  try {
+    await AuthService.register(data);      
     navigation.navigate("Login");
+  } catch (error) {
+    console.error("Error al registrar:", error);
+  }
 };
+
+// En el JSX:
+<RegisterForm onSubmit={handleRegister} disableAction={false} />
 
   return (
     <AuthTemplate

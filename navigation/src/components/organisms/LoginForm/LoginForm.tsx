@@ -1,5 +1,5 @@
-import React from "react";
 
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 // importamos atoms
@@ -12,55 +12,32 @@ import {
   InputField,
 } from "../../moleculas";
 
-// Props del formulario
 interface LoginProps {
-  onSubmit?: () => void;
+  onSubmit?: (data: { username: string; contrasena: string }) => void;
+  onNavigateRegister?: () => void;
 }
 
-// Organism LoginForm
-const LoginForm = ({
-  onSubmit,
-}: LoginProps) => {
+const LoginForm = ({ onSubmit, onNavigateRegister }: LoginProps) => {
+  const [username, setUsername] = useState("");
+  const [contrasena, setContrasena] = useState("");
 
   return (
     <View>
-
-      
-      {/* Campo email */}
-      <InputField
-        label="Username"
-        placeholder="Enter your email"
-      />
-
-      
-
-      {/* Campo contraseña */}
-      <InputField
-        label="Password"
-        placeholder="Enter your password"
-        secureTextEntry
-      />
-      
-      {/* Forgot password SIN FUNCION TODAVIAAAAAAAAAAAAAAAAAAAA*/}
+      <InputField label="Username" placeholder="Enter your username"
+        value={username} onChangeText={setUsername} />
+      <InputField label="Password" placeholder="Enter your password"
+        secureTextEntry value={contrasena} onChangeText={setContrasena} />
       <TouchableOpacity>
         <Text style={styles.forgotPassword}>FORGOT PASSWORD?</Text>
       </TouchableOpacity>
-
-
-      {/* Boton login SIN FUNCION TODAVIAAAAAAAAAAAAAAAAAAAA*/}
-      <Button
-       disable={false}
-        title="LOGIN"
-      />
-
-      {/* Footer: Sign up */}
+      <Button disable={false} title="LOGIN"
+        onSubmit={() => onSubmit?.({ username, contrasena })} />
       <View style={styles.footerContainer}>
         <Text style={styles.footerText}>Don't have an account?</Text>
-        <TouchableOpacity onPress={onSubmit}>
+        <TouchableOpacity onPress={onNavigateRegister}>
           <Text style={styles.signUpText}>SIGN UP</Text>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 };
